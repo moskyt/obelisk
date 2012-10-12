@@ -1,0 +1,27 @@
+// Place all the styles related to the map controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+div.event_info_window {
+  span.date {
+    font-weight:bold;
+  }
+}
+
+#box {
+  bottom:25px; 
+  left:25px; position:absolute; padding:10px; background-color:white; border:2px solid black;
+  h1 {
+    font-size:12px;
+    font-weight:bold;
+    margin:0px;
+    color:red;
+    padding-bottom:5px;
+  }
+  h2 {
+    font-size:11px;
+    font-weight:bold;
+    margin:0px;
+    padding-bottom:5px;
+  }
+}

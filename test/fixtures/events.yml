@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  date: 2012-10-12
+  lat: MyString
+  lng: MyString
+  obhana_info_url: MyString
+  obhana_register_url: MyString
+  club: MyString
+  homepage: MyString
+
+two:
+  name: MyString
+  date: 2012-10-12
+  lat: MyString
+  lng: MyString
+  obhana_info_url: MyString
+  obhana_register_url: MyString
+  club: MyString
+  homepage: MyString

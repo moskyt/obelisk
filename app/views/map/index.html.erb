@@ -1,0 +1,87 @@
+<div id="box">
+  <h1>OBELISK</h1>
+
+  <% if Event.without_location.future.any? %>
+    <h2>Nejsou na mapě:</h2>
+    <table>
+      <% Event.without_location.future.each do |event| %>
+        <tr>
+          <td><%= event.date.strftime("%d. %m. %Y") %>/<%= event.club %></td>
+          <td><%= event.name %></td>
+          <td><%= event.kind%></td>
+          <td>
+            <a href="<%= event.homepage %>">home</a>
+            <% unless event.obhana_register_url.blank? %>
+              (OB HANÁ: <a href="<%= event.obhana_register_url %>">přihlásit se</a> 
+              | <a href="<%= event.obhana_info_url %>">informace</a>)
+            <% end %>  
+          </td>
+        </tr>
+      <% end %>  
+    </table>
+  <% end %>  
+</div>
+
+
+<script>
+  $(function(){
+
+    var mapOptions = {
+      center: new google.maps.LatLng(49.851152, 15.212694),
+      zoom: 9,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map"),
+        mapOptions);
+        
+    var open_info_window = null;    
+
+    <% Event.with_location.future.each do |event| %>
+      var marker<%=event.id%> = new google.maps.Marker({
+          position: new google.maps.LatLng(<%=event.lat%>,<%=event.lng%>),
+          map: map,
+          icon: 'assets/markers/<%=event.color%>_Marker<%=event.letter%>.png',
+//          icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569',
+          title:"<%= event.name %>"
+      });
+      
+      contentString = 
+        '<div class="event_info_window">'
+        + '<span class="date"><%= event.date.strftime("%d. %m. %Y") %></span>' 
+        + '<br /><%= event.name %> (<%=event.kind%>)' 
+        + '<br /><a href="<%= event.homepage %>">homepage</a>' 
+        <% unless event.obhana_register_url.blank? %>
+        + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>' 
+        + ' | <a href="<%= event.obhana_info_url %>">informace</a> (OB HANÁ)' 
+        <% end %>
+        + '</div>';
+
+      var infowindow<%=event.id%> = new google.maps.InfoWindow({
+          content: contentString
+      });
+
+      google.maps.event.addListener(marker<%=event.id%>, 'click', function() {
+        if (open_info_window) { open_info_window.close(); }
+        if (open_info_window == infowindow<%=event.id%>) {
+          open_info_window = null;
+        } else {
+          infowindow<%=event.id%>.open(map,marker<%=event.id%>);
+          open_info_window = infowindow<%=event.id%>;          
+        }
+      });
+    <% end %>
+    
+    // var map = new google.maps.Map(document.getElementById("map"), {
+    //   center: new google.maps.LatLng(1),
+    //   zoom: 8});
+    // 
+    //   window.alert("!"+map);
+    // // // Monitor the window resize event and let the map know when it occurs
+    // // if (window.attachEvent) { 
+    // //   window.attachEvent("onresize", function() {this.map.onResize()} );
+    // // } else {
+    // //   window.addEventListener("resize", function() {this.map.onResize()} , false);
+    // // }
+    // 
+  });
+</script>
