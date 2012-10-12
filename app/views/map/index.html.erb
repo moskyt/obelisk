@@ -1,5 +1,9 @@
 <div id="box">
   <h1>OBELISK</h1>
+  
+  <h2>Info</h2>
+  <p>pěší (P), MTBO (B), lyžařský (L), horský (H)</p>
+  <p>tento týden (červená), příští (žlutá), později (modrá)</p>
 
   <% if Event.without_location.future.any? %>
     <h2>Nejsou na mapě:</h2>
@@ -10,7 +14,9 @@
           <td><%= event.name %></td>
           <td><%= event.kind%></td>
           <td>
-            <a href="<%= event.homepage %>">home</a>
+            <% unless event.homepage.blank? %>
+              <a href="<%= event.homepage %>">home</a>
+            <% end %>
             <% unless event.obhana_register_url.blank? %>
               (OB HANÁ: <a href="<%= event.obhana_register_url %>">přihlásit se</a> 
               | <a href="<%= event.obhana_info_url %>">informace</a>)

@@ -28,12 +28,35 @@ class Event < ActiveRecord::Base
   end
   
   def color
-    if date <= 1.week.from_now.to_date
+    if date <= Date.today.end_of_week
       'red'
-    elsif date <= 2.week.from_now.to_date
+    elsif date <= Date.today.end_of_week + 1.week
       'yellow'
     else
       'paleblue'
+    end
+  end
+  
+  def find!
+    require 'open-uri'
+    unless obhana_info_url.blank?
+      doc = Nokogiri::HTML(open(obhana_info_url))
+      doc.css("table > tr").each do |row|
+        if row.css("td")[0].text.to_s.mb_chars.strip == 'Místo konání'
+          place = row.css("td")[2].text.to_s.mb_chars.strip
+          unless place.blank?
+            puts "@? #{place}"
+            res = Geokit::Geocoders::MultiGeocoder.geocode("#{place} , Czech Republic")
+            if res and res.lat and res.lat > 0
+              self.lat, self.lng = res.lat, res.lng
+              self.save!
+              puts "  -> #{self}"
+            else 
+              puts "Not found"
+            end
+          end
+        end
+      end
     end
   end
   

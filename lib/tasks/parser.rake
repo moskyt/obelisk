@@ -1,10 +1,18 @@
 namespace :events do
 
-  task :build => [:clean, :fetch_hana, :fetch_klobouk]
+  task :build => [:clean, :fetch_hana, :fetch_klobouk, :find]
   
   task :clean => :environment do
     Event.destroy_all
   end
+  
+  task :find => :environment do
+    Event.without_location.each do |e|
+      puts e
+      e.find!
+    end
+  end
+  
   
   task :fetch_klobouk  => :environment do
     require 'open-uri'
