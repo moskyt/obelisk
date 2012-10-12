@@ -3,8 +3,8 @@ class CreateEvents < ActiveRecord::Migration
     create_table :events do |t|
       t.string :name
       t.date :date
-      t.string :lat
-      t.string :lng
+      t.float :lat
+      t.float :lng
       t.string :obhana_info_url
       t.string :obhana_register_url
       t.string :club

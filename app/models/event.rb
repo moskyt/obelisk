@@ -1,10 +1,33 @@
 class Event < ActiveRecord::Base
   
-  attr_accessible :club, :date, :homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url, :kind
+  attr_accessible :club, :date, :homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url, :kind, :place
   
-  scope :future, lambda{ where('date >= ?', Date.today)}
-  scope :with_location, where('lat > 0 AND lng > 0')
+  scope :future, lambda{ where('date >= ?', Date.today).order(:date)}
+  scope :with_location, where('(lat > 0) AND (lng > 0)')
   scope :without_location, where('lat IS NULL OR lng IS NULL')
+  
+  def self.location_grouped(events)
+    #return events.map{|e| [e]}
+    list = []
+    events = events.to_a.dup
+    n0 = events.size
+    while events.size > 0
+      e = [events.first]
+      events = events[1..-1]
+      events.each do |ee|
+        if (ee.lat - e.first.lat).abs + (ee.lng - e.first.lng).abs < 0.0001
+          e << ee
+          events = events - [ee]
+        end
+      end
+      if e.size > 1
+        puts "!#{e.map(&:to_s)} * '+'}"
+      end
+      list << e
+    end
+    puts "#{n0} -> #{list.size}"
+    list
+  end
   
   def letter
     case kind 
@@ -43,16 +66,20 @@ class Event < ActiveRecord::Base
       doc = Nokogiri::HTML(open(obhana_info_url))
       doc.css("table > tr").each do |row|
         if row.css("td")[0].text.to_s.mb_chars.strip == 'Místo konání'
-          place = row.css("td")[2].text.to_s.mb_chars.strip
+          place = row.css("td")[2].text.to_s.mb_chars.gsub('mapy.cz','').strip
           unless place.blank?
             puts "@? #{place}"
-            res = Geokit::Geocoders::MultiGeocoder.geocode("#{place} , Czech Republic")
-            if res and res.lat and res.lat > 0
-              self.lat, self.lng = res.lat, res.lng
-              self.save!
-              puts "  -> #{self}"
-            else 
-              puts "Not found"
+            self.place = place
+            self.save!
+            unless lat and lng and lat>0 and lng>0
+              res = Geokit::Geocoders::MultiGeocoder.geocode("#{place} , Czech Republic")
+              if res and res.lat and res.lat > 0
+                self.lat, self.lng = res.lat.to_f, res.lng.to_f
+                self.save!
+                puts "  -> #{self}"
+              else 
+                puts "Not found"
+              end
             end
           end
         end
@@ -63,9 +90,15 @@ class Event < ActiveRecord::Base
   def pair!
     e = Event.where(:date => date, :club => club)
     if (e.size == 2)
-      [:homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url].each do |a|
+      [:homepage,:name, :obhana_info_url, :obhana_register_url].each do |a|
         a = a.to_s
         if e.first.attributes[a].blank? and !e.last.attributes[a].blank?
+          e.first.update_attribute(a, e.last.attributes[a])
+        end
+      end
+      [:lat, :lng].each do |a|
+        a = a.to_s
+        if !(e.first.attributes[a] and e.first.attributes[a] > 0) and (e.last.attributes[a] and e.last.attributes[a] > 0)
           e.first.update_attribute(a, e.last.attributes[a])
         end
       end

@@ -1,5 +1,5 @@
 <div id="box">
-  <h1>OBELISK</h1>
+  <h1>OB<span style="color:#bbbbbb">ELISK</span></h1>
   
   <h2>Info</h2>
   <p>pěší (P), MTBO (B), lyžařský (L), horský (H)</p>
@@ -42,37 +42,42 @@
         
     var open_info_window = null;    
 
-    <% Event.with_location.future.each do |event| %>
-      var marker<%=event.id%> = new google.maps.Marker({
-          position: new google.maps.LatLng(<%=event.lat%>,<%=event.lng%>),
+    <% Event.location_grouped(Event.with_location.future).each do |events| %>
+      var marker<%=events.first.id%> = new google.maps.Marker({
+          position: new google.maps.LatLng(<%=events.first.lat%>,<%=events.first.lng%>),
           map: map,
-          icon: 'assets/markers/<%=event.color%>_Marker<%=event.letter%>.png',
-//          icon: 'http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|FE7569',
-          title:"<%= event.name %>"
+          icon: 'assets/markers/<%=events.first.color%>_Marker<%=events.first.letter%>.png',
+          title:"<%= events.first.name %>"
       });
       
       contentString = 
         '<div class="event_info_window">'
+        <% events.each do |event| %>
         + '<span class="date"><%= event.date.strftime("%d. %m. %Y") %></span>' 
-        + '<br /><%= event.name %> (<%=event.kind%>)' 
+        + '  [<%= event.club %>]' 
+        + '<br /><%= event.name %> (<%=event.kind%>)<br /><%= event.place%><br />' 
+        <% unless event.homepage.blank? %>
         + '<br /><a href="<%= event.homepage %>">homepage</a>' 
+        <% end %>
         <% unless event.obhana_register_url.blank? %>
         + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>' 
         + ' | <a href="<%= event.obhana_info_url %>">informace</a> (OB HANÁ)' 
         <% end %>
+        + '<br /><br />'
+        <% end %>
         + '</div>';
 
-      var infowindow<%=event.id%> = new google.maps.InfoWindow({
+      var infowindow<%=events.first.id%> = new google.maps.InfoWindow({
           content: contentString
       });
 
-      google.maps.event.addListener(marker<%=event.id%>, 'click', function() {
+      google.maps.event.addListener(marker<%=events.first.id%>, 'click', function() {
         if (open_info_window) { open_info_window.close(); }
-        if (open_info_window == infowindow<%=event.id%>) {
+        if (open_info_window == infowindow<%=events.first.id%>) {
           open_info_window = null;
         } else {
-          infowindow<%=event.id%>.open(map,marker<%=event.id%>);
-          open_info_window = infowindow<%=event.id%>;          
+          infowindow<%=events.first.id%>.open(map,marker<%=events.first.id%>);
+          open_info_window = infowindow<%=events.first.id%>;          
         }
       });
     <% end %>

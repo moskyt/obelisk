@@ -10,13 +10,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121012143505) do
+ActiveRecord::Schema.define(:version => 20121012150804) do
 
   create_table "events", :force => true do |t|
     t.string   "name"
     t.date     "date"
-    t.string   "lat"
-    t.string   "lng"
+    t.float    "lat"
+    t.float    "lng"
     t.string   "obhana_info_url"
     t.string   "obhana_register_url"
     t.string   "club"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(:version => 20121012143505) do
     t.datetime "created_at",          :null => false
     t.datetime "updated_at",          :null => false
     t.string   "kind"
+    t.string   "place"
   end
 
 end

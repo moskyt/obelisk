@@ -7,8 +7,7 @@ namespace :events do
   end
   
   task :find => :environment do
-    Event.without_location.each do |e|
-      puts e
+    Event.all.each do |e|
       e.find!
     end
   end
@@ -42,8 +41,8 @@ namespace :events do
                     if (url =~ /ssq=(\d+)°(\d+)'(\d+)\.(\d+)%22N, (\d+)°(\d+)'(\d+)\.(\d+)%22E@/)
                       a,b,c,d = $1.to_f, $2.to_f, $3.to_f, $4.to_f
                       e,f,g,h = $5.to_f, $6.to_f, $7.to_f, $8.to_f
-                      lat = "#{a + b/60 + c/3600 + d/3600000}"
-                      lng = "#{e + f/60 + g/3600 + h/3600000}"
+                      lat = a + b/60 + c/3600 + d/3600000
+                      lng = e + f/60 + g/3600 + h/3600000
                     end
                   elsif src.include?('home')
                     hurl = url
@@ -96,7 +95,7 @@ namespace :events do
           url =  a.attributes["href"].to_s.mb_chars.strip
           if url =~ %r{^http://www.mapy.cz/\?query=(\d+\.\d+)\s+(\d+\.\d+)$}
             x,y = url.split("=")            
-            lat, lng = y.split
+            lat, lng = *y.split.map(&:to_f)
           else
             puts url
           end
