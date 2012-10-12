@@ -1,6 +1,6 @@
 <div id="box">
   <h1>OB<span style="color:#bbbbbb">ELISK</span></h1>
-  
+
   <h2>Info</h2>
   <p>pěší (P), MTBO (B), lyžařský (L), horský (H)</p>
   <p>tento týden (červená), příští (žlutá), později (modrá)</p>
@@ -18,14 +18,14 @@
               <a href="<%= event.homepage %>">home</a>
             <% end %>
             <% unless event.obhana_register_url.blank? %>
-              (OB HANÁ: <a href="<%= event.obhana_register_url %>">přihlásit se</a> 
+              (OB HANÁ: <a href="<%= event.obhana_register_url %>">přihlásit se</a>
               | <a href="<%= event.obhana_info_url %>">informace</a>)
-            <% end %>  
+            <% end %>
           </td>
         </tr>
-      <% end %>  
+      <% end %>
     </table>
-  <% end %>  
+  <% end %>
 </div>
 
 
@@ -34,13 +34,13 @@
 
     var mapOptions = {
       center: new google.maps.LatLng(49.851152, 15.212694),
-      zoom: 9,
+      zoom: 8,
       mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById("map"),
         mapOptions);
-        
-    var open_info_window = null;    
+
+    var open_info_window = null;
 
     <% Event.location_grouped(Event.with_location.future).each do |events| %>
       var marker<%=events.first.id%> = new google.maps.Marker({
@@ -49,19 +49,19 @@
           icon: 'assets/markers/<%=events.first.color%>_Marker<%=events.first.letter%>.png',
           title:"<%= events.first.name %>"
       });
-      
-      contentString = 
+
+      contentString =
         '<div class="event_info_window">'
         <% events.each do |event| %>
-        + '<span class="date"><%= event.date.strftime("%d. %m. %Y") %></span>' 
-        + '  [<%= event.club %>]' 
-        + '<br /><%= event.name %> (<%=event.kind%>)<br /><%= event.place%><br />' 
+        + '<span class="date"><%= event.date.strftime("%d. %m. %Y") %></span>'
+        + '  [<%= event.club %>]'
+        + '<br /><%= event.name %> (<%=event.kind%>)<br /><%= event.place%><br />'
         <% unless event.homepage.blank? %>
-        + '<br /><a href="<%= event.homepage %>">homepage</a>' 
+        + '<br /><a href="<%= event.homepage %>">homepage</a>'
         <% end %>
         <% unless event.obhana_register_url.blank? %>
-        + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>' 
-        + ' | <a href="<%= event.obhana_info_url %>">informace</a> (OB HANÁ)' 
+        + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>'
+        + ' | <a href="<%= event.obhana_info_url %>">informace</a> (OB HANÁ)'
         <% end %>
         + '<br /><br />'
         <% end %>
@@ -77,22 +77,22 @@
           open_info_window = null;
         } else {
           infowindow<%=events.first.id%>.open(map,marker<%=events.first.id%>);
-          open_info_window = infowindow<%=events.first.id%>;          
+          open_info_window = infowindow<%=events.first.id%>;
         }
       });
     <% end %>
-    
+
     // var map = new google.maps.Map(document.getElementById("map"), {
     //   center: new google.maps.LatLng(1),
     //   zoom: 8});
-    // 
+    //
     //   window.alert("!"+map);
     // // // Monitor the window resize event and let the map know when it occurs
-    // // if (window.attachEvent) { 
+    // // if (window.attachEvent) {
     // //   window.attachEvent("onresize", function() {this.map.onResize()} );
     // // } else {
     // //   window.addEventListener("resize", function() {this.map.onResize()} , false);
     // // }
-    // 
+    //
   });
 </script>
