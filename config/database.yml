@@ -22,6 +22,6 @@ production:
   adapter: mysql2
   database: obelisk
   username: root
-  password:
+  password: root
   pool: 5
   timeout: 5000
