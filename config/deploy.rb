@@ -19,3 +19,7 @@ role :app, "siven.onesim.net"
 role :web, "siven.onesim.net"
 role :db,  "siven.onesim.net", :primary => true
 set :deploy_to, "/home/moskyt/obelisk"
+
+task :events do
+  run "cd #{current_path}; bundle exec rake events:build RAILS_ENV=production"
+end

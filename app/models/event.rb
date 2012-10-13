@@ -1,6 +1,6 @@
 class Event < ActiveRecord::Base
   
-  attr_accessible :club, :date, :homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url, :kind, :place
+  attr_accessible :club, :date, :homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url, :pokyny_url, :rozpis_url, :kind, :place
   
   scope :future, lambda{ where('date >= ?', Date.today).order(:date)}
   scope :with_location, where('(lat > 0) AND (lng > 0)')
@@ -60,6 +60,14 @@ class Event < ActiveRecord::Base
     end
   end
   
+  def urls
+    {
+      'homepage' => homepage,
+      'rozpis' => rozpis_url,
+      'pokyny' => pokyny_url,      
+    }.select{|x,y| !y.blank?}
+  end
+  
   def find!
     require 'open-uri'
     unless obhana_info_url.blank?
@@ -90,7 +98,7 @@ class Event < ActiveRecord::Base
   def pair!
     e = Event.where(:date => date, :club => club)
     if (e.size == 2)
-      [:homepage,:name, :obhana_info_url, :obhana_register_url].each do |a|
+      [:homepage, :rozpis_url, :pokyny_url, :name, :obhana_info_url, :obhana_register_url].each do |a|
         a = a.to_s
         if e.first.attributes[a].blank? and !e.last.attributes[a].blank?
           e.first.update_attribute(a, e.last.attributes[a])

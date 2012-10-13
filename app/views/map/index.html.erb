@@ -14,9 +14,11 @@
           <td><%= event.name %></td>
           <td><%= event.kind%></td>
           <td>
-            <% unless event.homepage.blank? %>
-              <a href="<%= event.homepage %>">home</a>
+            <% unless event.urls.blank? %>
+              <%= (event.urls.map{|k,v| %{<a href="#{v}">#{k}</a>}} * ' | ').html_safe %>
             <% end %>
+          </td>
+          <td>
             <% unless event.obhana_register_url.blank? %>
               (OB HANÁ: <a href="<%= event.obhana_register_url %>">přihlásit se</a>
               | <a href="<%= event.obhana_info_url %>">informace</a>)
@@ -56,8 +58,8 @@
         + '<span class="date"><%= event.date.strftime("%d. %m. %Y") %></span>'
         + '  [<%= event.club %>]'
         + '<br /><%= event.name %> (<%=event.kind%>)<br /><%= event.place%><br />'
-        <% unless event.homepage.blank? %>
-        + '<br /><a href="<%= event.homepage %>">homepage</a>'
+        <% unless event.urls.blank? %>
+        + '<br /><%= (event.urls.map{|k,v| %{<a href="#{v}">#{k}</a>}} * ' | ').html_safe %>'
         <% end %>
         <% unless event.obhana_register_url.blank? %>
         + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>'

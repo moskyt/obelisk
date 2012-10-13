@@ -31,7 +31,7 @@ namespace :events do
               name = cells[3].text.mb_chars.strip
               club = cells[5].text.mb_chars.strip
               
-              lat, lng, hurl = nil, nil, nil
+              lat, lng, hurl, rurl, purl = nil, nil, nil, nil, nil
               
               cells[6].css("a").each do |link|
                 if img = link.css('img').first
@@ -44,6 +44,10 @@ namespace :events do
                       lat = a + b/60 + c/3600 + d/3600000
                       lng = e + f/60 + g/3600 + h/3600000
                     end
+                  elsif src.include?('rozpis')
+                    rurl = url
+                  elsif src.include?('pokyny')
+                    purl = url
                   elsif src.include?('home')
                     hurl = url
                   end
@@ -65,6 +69,8 @@ namespace :events do
               :date => date,
               :lat => lat, :lng => lng,
               :homepage => hurl,
+              :rozpis_url => rurl,
+              :pokyny_url => purl,
               :kind => kind
               )
               e.pair!
