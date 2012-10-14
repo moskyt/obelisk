@@ -1,0 +1,18 @@
+- @i ||= 0
+- @i += 1
+%tr{:class => "row#{@i % 2}"}
+  %td.date= event.date.strftime("%d. %m.")
+  %td.name= event.name
+  %td.kind= event.kind
+  %td.urls
+    - unless event.urls.blank?
+      = (event.urls.map{|k,v| %{<a href="#{v}">#{k}</a>}} * ' | ').html_safe
+  %td.obhana
+    - unless event.obhana_register_url.blank? and event.obhana_info_url.blank?
+      OB HANÁ:
+    - unless event.obhana_register_url.blank?
+      = link_to "přihlásit se", event.obhana_register_url
+    - unless event.obhana_register_url.blank? or event.obhana_info_url.blank?
+      = "|"
+    - unless event.obhana_info_url.blank?
+      = link_to "informace", event.obhana_info_url

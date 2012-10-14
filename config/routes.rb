@@ -56,4 +56,8 @@ Obelisk::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
   root :to => 'map#index'
+
+  match 'calendar' => 'info#calendar', :as => :calendar
+  match 'info' => 'info#info', :as => :info
+  match 'map' => 'map#index', :as => :map
 end

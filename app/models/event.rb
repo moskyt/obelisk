@@ -1,11 +1,14 @@
 class Event < ActiveRecord::Base
-  
+
   attr_accessible :club, :date, :homepage, :lat, :lng, :name, :obhana_info_url, :obhana_register_url, :pokyny_url, :rozpis_url, :kind, :place
-  
+
   scope :future, lambda{ where('date >= ?', Date.today).order(:date)}
+  scope :this_week, lambda{ where('date <= ?', Date.today.end_of_week).order(:date)}
+  scope :next_week, lambda{ where('date > ? AND date <= ?', Date.today.end_of_week, Date.today.end_of_week+1.week).order(:date)}
+  scope :superfuture, lambda{ where('date >= ?', Date.today.end_of_week+1.week).order(:date)}
   scope :with_location, where('(lat > 0) AND (lng > 0)')
   scope :without_location, where('lat IS NULL OR lng IS NULL')
-  
+
   def self.location_grouped(events)
     #return events.map{|e| [e]}
     list = []
@@ -28,9 +31,9 @@ class Event < ActiveRecord::Base
     puts "#{n0} -> #{list.size}"
     list
   end
-  
+
   def letter
-    case kind 
+    case kind
     when 'OB'
       'P'
     when 'LOB'
@@ -45,11 +48,11 @@ class Event < ActiveRecord::Base
       'X'
     end
   end
-  
+
   def to_s
-    "[#{date}][#{club}:#{kind} -- #{name}] @ [#{lat},#{lng}] => [#{homepage}]"    
+    "[#{date}][#{club}:#{kind} -- #{name}] @ [#{lat},#{lng}] => [#{homepage}]"
   end
-  
+
   def color
     if date <= Date.today.end_of_week
       'red'
@@ -59,15 +62,15 @@ class Event < ActiveRecord::Base
       'paleblue'
     end
   end
-  
+
   def urls
     {
       'homepage' => homepage,
       'rozpis' => rozpis_url,
-      'pokyny' => pokyny_url,      
+      'pokyny' => pokyny_url,
     }.select{|x,y| !y.blank?}
   end
-  
+
   def find!
     require 'open-uri'
     unless obhana_info_url.blank?
@@ -85,7 +88,7 @@ class Event < ActiveRecord::Base
                 self.lat, self.lng = res.lat.to_f, res.lng.to_f
                 self.save!
                 puts "  -> #{self}"
-              else 
+              else
                 puts "Not found"
               end
             end
@@ -94,7 +97,7 @@ class Event < ActiveRecord::Base
       end
     end
   end
-  
+
   def pair!
     e = Event.where(:date => date, :club => club)
     if (e.size == 2)
@@ -114,5 +117,5 @@ class Event < ActiveRecord::Base
       e.last.destroy
     end
   end
-  
+
 end

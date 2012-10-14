@@ -1,0 +1,82 @@
+// Place all the styles related to the info controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+body,html {
+  margin:0px;
+}
+
+#content {
+  padding:20px;
+}
+
+#header {
+  padding:0px;
+  border-bottom:1px solid black;
+  margin:0px;
+  overflow:auto;
+  ul {
+    overflow:auto;
+    margin:20px;
+    padding:0px;
+    li {
+      list-style-type:none;
+      float:left;
+      margin:0px;
+      padding:0px;
+      a {
+        font-weight:normal;
+      }
+    }
+    li+li {
+      margin-left:8px;
+      border-left:1px solid black;
+      padding-left:8px;
+    }
+  }
+}
+
+#content {
+  p {
+    margin:0px;
+    -webkit-margin-before: 0px;
+    -webkit-margin-after: 0px;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+  }
+  p+p {
+    margin-top:0.8em;
+  }
+}
+
+table.events {
+  border-spacing:0px;
+  td {
+    vertical-align:top;
+    margin:0px;
+    padding:2px;
+    border:0px;
+  }
+  tr.row0, tr.row0 td {
+    background-color:#ddd;
+  }
+  tr.row1, tr.row1 td {
+    background-color:#fff;
+  }
+  td.date {
+    width:60px;
+  }
+  td.name {
+    width:200px;
+  }
+  td.kind {
+    width:60px;
+  }
+  td.urls {
+    width:140px;
+  }
+  td.obhana {
+    width:250px;
+  }
+
+}

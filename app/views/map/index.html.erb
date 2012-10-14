@@ -1,7 +1,5 @@
 <div id="box">
-  <h1>OB<span style="color:#bbbbbb">ELISK</span></h1>
-
-  <h2>Info</h2>
+  <h2>Legenda</h2>
   <p>pěší (P), MTBO (B), lyžařský (L), horský (H)</p>
   <p>tento týden (červená), příští (žlutá), později (modrá)</p>
 
@@ -28,6 +26,14 @@
       <% end %>
     </table>
   <% end %>
+</div>
+
+<div id="box_menu">
+  <ul>
+    <li style="font-weight:bold"><span style="color:#f00">OB</span><span style="color:#bbb">ELISK</span></li>
+    <li><%= link_to "Kalendář", calendar_path %></li>
+    <li><%= link_to "Info", info_path %></li>
+  </ul>
 </div>
 
 

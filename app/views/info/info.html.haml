@@ -1,0 +1,14 @@
+%p
+  OBelisk je jednoduchý syndikátor a front-end pro kalendáře orientačních závodů. Data z jednotlivých kalendářů sjednocuje, zobrazuje na mapě a poskytuje přímé odkazy jednak na stránky závodů a jednak pro přihlášení přes systém OB Haná.
+
+%p
+  OBelisk neobsahuje žádný vlastní kalendář, pouze přejímá data z ostatních zdrojů. Pokud víte o dalších kalendářích OB akcí (nejen těch oficiálních/svazových) obsahující data ve strojově zpracovatelné formě, pošlete mi, prosím, odkaz a bude-li možné, připojím jej do OBelisku.
+
+%p
+  OBelisk aktuálně používá tyto kalendáře:
+  %ul
+    %li= link_to "OB Haná", "http://www.obhana.cz/prihlasky/VyberZavod.asp"
+    %li= link_to "kalendář ČSOS", "http://klobouk.fsv.cvut.cz/~hora/kalendar/kal2001.php?M=2&N=2"
+
+%p
+  Veškeré komentáře, připomínky a návrhy na zlepšení jsou veskrze vítány na adrese #{mail_to 'moskyt@rozhled.cz', nil, :encode => 'javascript'}.

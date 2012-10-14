@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>OBelisk</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <div id="header">
+    <ul>
+      <li style="font-weight:bold"><span style="color:#f00">OB</span><span style="color:#bbb">ELISK</span></li>
+      <li><%= link_to "Mapa", map_path %></li>
+      <li><%= link_to "Kalendář", calendar_path %></li>
+      <li><%= link_to "Info", info_path %></li>
+    </ul>
+  </div>
+  <div id="content">
+    <%= yield %>
+  </div>
+
+</body></html>

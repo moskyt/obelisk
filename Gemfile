@@ -11,6 +11,7 @@ gem 'sqlite3'
 gem 'geokit'
 gem 'nokogiri'
 gem 'capistrano'
+gem 'haml'
 
 # Gems used only for assets and not required
 # in production environments by default.

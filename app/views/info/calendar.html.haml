@@ -1,0 +1,16 @@
+- if Event.future.any?
+  - if Event.this_week.future.any?
+    %h2 Závody tento týden
+    %table.events
+      - @i = 1
+      = render :partial => 'calendar_line', :as => :event, :collection => Event.this_week.future
+  - if Event.next_week.any?
+    %h2 Závody příští týden
+    %table.events
+      = render :partial => 'calendar_line', :as => :event, :collection => Event.next_week
+  - if Event.superfuture.any?
+    %h2 Ostatní závody
+    %table.events
+      = render :partial => 'calendar_line', :as => :event, :collection => Event.superfuture
+- else
+  %p V kalendářích nejsou žádné závody
