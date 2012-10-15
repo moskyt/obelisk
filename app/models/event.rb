@@ -71,7 +71,7 @@ class Event < ActiveRecord::Base
     }.select{|x,y| !y.blank?}
   end
 
-  def find!
+  def ob_hana!
     require 'open-uri'
     unless obhana_info_url.blank?
       doc = Nokogiri::HTML(open(obhana_info_url))
@@ -81,19 +81,45 @@ class Event < ActiveRecord::Base
           unless place.blank?
             puts "@? #{place}"
             self.place = place
-            self.save!
-            unless lat and lng and lat>0 and lng>0
-              res = Geokit::Geocoders::MultiGeocoder.geocode("#{place} , Czech Republic")
-              if res and res.lat and res.lat > 0
-                self.lat, self.lng = res.lat.to_f, res.lng.to_f
-                self.save!
-                puts "  -> #{self}"
-              else
-                puts "Not found"
-              end
-            end
           end
         end
+        if row.css("td")[0].text.to_s.mb_chars.strip == 'Řádné přihlášky do'
+          deadline_txt = row.css("td")[2].text.to_s.mb_chars.strip
+          unless deadline_txt.blank?
+            foo, day, month, year, bar = *deadline_txt.split
+            d = day.to_i
+            m = %w{x ledna února března dubna května června července srpna září října listopadu prosince}.index(month)
+            y = year.to_i
+            puts "#? #{deadline_txt} -> #{d}.#{m}.#{y} (#{day}-#{month}-#{year})"
+            self.deadline = Date.civil(y,m,d) rescue nil            
+          end
+        end
+        if row.css("td")[0].text.to_s.mb_chars.strip == 'Dodatečné přihlášky do'
+          deadline_txt = row.css("td")[2].text.to_s.mb_chars.strip
+          unless deadline_txt.blank?
+            puts "#+? #{deadline_txt}"
+            foo, day, month, year, bar = *deadline_txt.split
+            d = day.to_i
+            m = %w{x ledna února března dubna května června července srpna září října listopadu prosince}.index(month)
+            y = year.to_i
+            puts "#? #{deadline_txt} -> #{d}.#{m}.#{y} (#{day}-#{month}-#{year})"
+            self.deadline_extended = Date.civil(y,m,d) rescue nil            
+          end
+        end
+      end
+    end
+    self.save!
+  end
+
+  def find!
+    unless lat and lng and lat>0 and lng>0
+      res = Geokit::Geocoders::MultiGeocoder.geocode("#{place} , Czech Republic")
+      if res and res.lat and res.lat > 0
+        self.lat, self.lng = res.lat.to_f, res.lng.to_f
+        self.save!
+        puts "  -> #{self}"
+      else
+        puts "Not found"
       end
     end
   end

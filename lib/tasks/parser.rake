@@ -129,6 +129,7 @@ namespace :events do
         :homepage => hurl,
         :kind => 'OB'
         )
+        e.ob_hana!
         e.pair!
       else 
         puts "? [#{date}]"
