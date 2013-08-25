@@ -71,6 +71,12 @@
         + '<br /><a href="<%= event.obhana_register_url %>">přihlásit se</a>'
         + ' | <a href="<%= event.obhana_info_url %>">informace</a> (OB HANÁ)'
         <% end %>
+        <% if event.deadline %>
+        + '<br />přihlášky do <%= event.deadline.strftime("%d. %m.") %>'
+        <% if event.deadline_extended %>
+        + ' (<%= event.deadline_extended.strftime("%d. %m.") %>)'
+        <% end %>
+        <% end %>
         + '<br /><br />'
         <% end %>
         + '</div>';
