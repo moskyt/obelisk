@@ -23,3 +23,9 @@ set :deploy_to, "/home/moskyt/obelisk"
 task :events do
   run "cd #{current_path}; bundle exec rake events:build RAILS_ENV=production"
 end
+
+namespace :deploy do
+  task :restart do
+    run "cd #{current_path}; touch tmp/restart.txt"
+  end
+end
